@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow {
+  id              String           @id @default(cuid())
+  name            String
+  description     String?
+  status          String           @default("DRAFT")
+  published       Boolean          @default(false)
+  latestVersion   WorkflowVersion? @relation("LatestWorkflowVersion", fields: [latestVersionId], references: [id])
+  latestVersionId String?          @unique
+  versions        WorkflowVersion[]
+  conversations   Conversation[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model WorkflowVersion {
+  id                 String     @id @default(cuid())
+  workflow           Workflow   @relation(fields: [workflowId], references: [id])
+  workflowId         String
+  latestForWorkflow  Workflow?  @relation("LatestWorkflowVersion")
+  version            Int
+  payload            String
+  summary            String?
+  createdAt          DateTime   @default(now())
+}
+
+model Conversation {
+  id         String    @id @default(cuid())
+  workflow   Workflow? @relation(fields: [workflowId], references: [id])
+  workflowId String?
+  messages   Message[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  role           String
+  content        String
+  createdAt      DateTime     @default(now())
+}
+
+model NodeDefinition {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  category    String
+  description String?
+  inputs      String
+  outputs     String
+  createdAt   DateTime @default(now())
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  type        String
+  status      String    @default("PENDING")
+  payload     String
+  result      String?
+  lastError   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  entityId   String
+  entityType String
+  action     String
+  userId     String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+}
+
+model DeadLetterTask {
+  id              String   @id @default(cuid())
+  originalTaskId  String
+  taskType        String
+  payload         String
+  error           String
+  errorStack      String?
+  retryCount      Int
+  maxRetries      Int
+  status          String   @default("pending") // pending, retrying, abandoned
+  nextRetryAt     DateTime
+  metadata        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CostUsage {
+  id            String   @id @default(cuid())
+  provider      String
+  modelId       String
+  inputTokens   Int
+  outputTokens  Int
+  totalTokens   Int
+  inputCost     Float
+  outputCost    Float
+  totalCost     Float
+  createdAt     DateTime @default(now())
+}

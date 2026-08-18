@@ -1,4 +1,5 @@
 import express from "express";
+import jwtMiddleware from "../lib/auth.js";
 import * as workflowController from "../controllers/workflowController.js";
 import * as conversationController from "../controllers/conversationController.js";
 import * as nodeCatalogController from "../controllers/nodeCatalogController.js";
@@ -12,12 +13,12 @@ const router = express.Router();
 
 // Workflow endpoints
 router.get("/workflows", workflowController.listWorkflows);
-router.post("/workflows", workflowController.createWorkflow);
-router.post("/workflows/async", workflowController.createWorkflowAsync);
+router.post("/workflows", jwtMiddleware(["editor", "admin"]), workflowController.createWorkflow);
+router.post("/workflows/async", jwtMiddleware(["editor", "admin"]), workflowController.createWorkflowAsync);
 router.get("/workflows/:workflowId", workflowController.getWorkflow);
-router.patch("/workflows/:workflowId", workflowController.patchWorkflow);
-router.post("/workflows/:workflowId/explain", workflowController.explainWorkflow);
-router.post("/workflows/validate", workflowController.validateWorkflow);
+router.patch("/workflows/:workflowId", jwtMiddleware(["editor", "admin"]), workflowController.patchWorkflow);
+router.post("/workflows/:workflowId/explain", jwtMiddleware(["editor", "admin"]), workflowController.explainWorkflow);
+router.post("/workflows/validate", jwtMiddleware(["editor", "admin"]), workflowController.validateWorkflow);
 
 // Conversation endpoints
 router.post("/conversations", conversationController.startConversation);

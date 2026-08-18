@@ -1,4 +1,16 @@
-node_modules
+node_modules/
+dist/
+frontend/node_modules/
+frontend/dist/
+.env
+.env.*
+.DS_Store
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+*.localnode_modules
 .dist
 dist
 .env

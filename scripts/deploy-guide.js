@@ -5,8 +5,13 @@
  * This script provides step-by-step instructions for deploying to Vercel and Render
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const BLUE = '\x1b[34m';
 const GREEN = '\x1b[32m';
@@ -25,8 +30,6 @@ function header(text) {
 
 async function checkPrerequisites() {
   log(BLUE, 'Checking prerequisites...\n');
-
-  const { execSync } = require('child_process');
 
   try {
     execSync('git --version', { stdio: 'pipe' });

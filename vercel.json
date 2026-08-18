@@ -1,0 +1,27 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "env": {
+    "VITE_API_BASE_URL": {
+      "description": "Backend API base URL for production",
+      "required": true
+    },
+    "VITE_OIDC_AUTHORITY": {
+      "description": "OIDC provider authority URL",
+      "required": true
+    },
+    "VITE_OIDC_CLIENT_ID": {
+      "description": "OIDC client ID",
+      "required": true
+    },
+    "VITE_OIDC_REDIRECT_URI": {
+      "description": "OIDC redirect URI (e.g., https://your-domain.vercel.app/auth/callback)",
+      "required": true
+    },
+    "VITE_OIDC_SCOPE": {
+      "description": "OIDC scopes to request",
+      "required": false,
+      "default": "openid profile email"
+    }
+  }
+}

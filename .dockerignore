@@ -1,0 +1,16 @@
+node_modules/
+npm-debug.log
+.git
+.gitignore
+.vscode
+.env
+.env.example
+src/
+prisma/migrations/
+*.md
+.github/
+dist/**/*.map
+coverage/
+.DS_Store
+*.ts
+tsconfig.json
